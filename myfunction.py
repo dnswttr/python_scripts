@@ -452,7 +452,7 @@ def my_enzo_conv_to_time(path, fname, snap0, snap1, h0, ome_m, ome_l, unit = 'Gy
 #                     - 'Myr': Megayears
 #                     - 'sec': seconds
 #	RETURNS: 
-#  - the time
+#  - time: the time
 # FILES SAVED: none
 #
 ############################################################
@@ -482,23 +482,68 @@ def my_red_to_time(ome_m, ome_l, h0, cr, unit = 'Gyr'):
 
 	return time
 		
-	
+############################################################
+#
+# my_derivative:
+# 	TASK: compute derivative of an ND array
+#	INPUT: 
+#  + arr: array with the ND data
+#  + axis: axis, along which the derivative is compute
+#          it is either 'x', 'y' or 'z'
+#  + res (optional): resolution that can be set, if the physical resolution 
+#                    of the cell matters
+#	RETURNS: 
+#  - darr: array that contains the derivative
+# FILES SAVED: none
+#
+############################################################
+
+def my_derivativ(arr, axis, res = 1):
+	if axis not in ['x', 'y', 'z']:
+		print('Error in my_derivativ (my_function.py): \n axis that was given does not exist')
+		exit()
+
+	ndim = np.ndim(arr)
+	if ndim == 0:
+		print('Error in my_derivativ (my_function.py): \n array dimension is 0')
+		exit()
+
+	if axis == 'x':
+		darr = (np.roll(arr, -1, axis = 0) - np.roll(arr, 1, axis = 0))/(2*res)
+	if axis == 'y':
+		if ndim < 2:
+			print('Error in my_derivativ (my_function.py): \n array dimension is smaller than 2 but y axis was chosen')
+			exit()
+		darr = (np.roll(arr, -1, axis = 0) - np.roll(arr, 1, axis = 1))/(2*res)
+	if axis == 'z':
+		if ndim < 3:
+			print('Error in my_derivativ (my_function.py): \n array dimension is smaller than 3 but z axis was chosen')
+			exit()
+		darr = (np.roll(arr, -1, axis = 0) - np.roll(arr, 1, axis = 2))/(2*res)
+
+	return darr
 
 
+############################################################
+#
+# my_get_array_size:
+# 	TASK: computes the size of an ND array
+#	INPUT: 
+#  + arr: array with the ND data
+#	RETURNS: 
+#  - sarr: ND array, that has the size of each dimension stored
+#          for a single number sarr = 0
+# FILES SAVED: none
+#
+############################################################
+
+def my_get_array_size(arr):
+	ndim = np.ndim(arr)
+	if ndim == 0:
+		sarr = 0
+	else:
+		sarr = np.zeros(ndim)
+		for i in range(ndim):
+			sarr[i] = np.size(arr,i)
+	return sarr
 		
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
