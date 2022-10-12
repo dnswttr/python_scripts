@@ -81,8 +81,6 @@ def my_writefits(fname, data):
 	hdul = fits.HDUList([hdu])
 	hdul.writeto(fname + '.fits', overwrite = True)
 
-
-
 ############################################################
 #
 # my_contour:
