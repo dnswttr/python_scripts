@@ -44,8 +44,6 @@ def my_plot_init():
 	plt.rcParams['lines.markersize'] = '21'
 	plt.rcParams["mathtext.fontset"] = "dejavuserif"
 
-
-
 ############################################################
 #
 # my_readfits:
