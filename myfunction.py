@@ -7,9 +7,10 @@ import h5py as h5
 ############################################################
 #
 # my_plot_init:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: initializes plot properties as I like them to look like
+#	INPUT: nothing
+#	RETURNS: nothing
+# FILES SAVED: none
 #
 ############################################################
 
@@ -47,9 +48,17 @@ def my_plot_init():
 ############################################################
 #
 # my_readfits:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: reads a fits file
+#	INPUT: 
+#  + path: full path plus filename to the fits file
+#          e.g.: /path/filename.fits
 #	RETURNS: 
+#  - header: head of the fits files
+#  - im: the data of the actual image
+#  - sd: size of the image along the different axis
+#  - x: numpy array with x coordinates of the image
+#  - y: numpy array with y coordinates of the image
+# FILES SAVED: none
 #
 ############################################################
 
@@ -70,9 +79,15 @@ def my_readfits(path):
 ############################################################
 #
 # my_writefits:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: writes a fits file
+#	INPUT: 
+#  + fname: full path plus filename without the ending
+#           ".fits" will be added by the function
+#           e.g.: /path/filename
+#  + data: the data that is to be written to file
+#	RETURNS: nothing
+# FILES SAVED:
+#  ~ filename.fits: the fits file at /path/filename.fits
 #
 ############################################################
 
@@ -84,9 +99,22 @@ def my_writefits(fname, data):
 ############################################################
 #
 # my_contour:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: produce a filled contour plot of an image
+#	INPUT:
+#  + x: x coordinates of the image
+#  + y: y coordinates of the image
+#  + im: image data
+#  + nlev (optional): number of contours, default 256
+#  + tit (optional): title of the image, default ''
+#  + xt (optional): xlabel of the image, default ''
+#  + yt (optional): ylabel of the image, default ''
+#  + ct (optional): label of the colorbar, default ''
+#  + cm (optional): colormap, default 'magma'
+#  + ocor (optional): position of the colorbar, default 'v'
+#                     - 'v' vertical
+#                     - 'h' horizontal
+#	RETURNS: nothing
+# FILES SAVED: none
 #
 ############################################################
 
@@ -96,7 +124,6 @@ def my_contour(x,y,im, nlev = 256, tit = '',  xt = '', yt = '', ct = '', cm = 'm
 	print(np.size(im))
 	print(np.size(im,0))
 	print(np.size(im,1))
-
 
 	plt.contourf(y,x,im,nlev, cmap = cm)
 	plt.xlabel(xt)
@@ -109,9 +136,27 @@ def my_contour(x,y,im, nlev = 256, tit = '',  xt = '', yt = '', ct = '', cm = 'm
 ############################################################
 #
 # my_readhdf5:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: reads a hdf5 file
+#	INPUT:
+#  + pathf: full path plus filename
+#           e.g.: /path/file.hdf5
+#  + prop: property to be read
+#  + cube (optional): set, if only part of the file should be read
+#                     cube is a array with 6 entries that are the 
+#                     start and end coordinates of the data chunk
+#                     ordered as [xm, xp, ym, yp, zm, zp]
+#                     e.g. [2,3,4,5,6,7] will read a 2^3 array that 
+#                     contains x coordinates 2 to 3, y coordinates 
+#                     4 to 5, and z coordinates 6 to 7. Here, "to"
+#                     means including
+#                     default not set
+#  + conv (optional): if the data cube is to be multiplied with some
+#                     conversion factor (e.g. useful for enzo data)
+#                     default 1
+#     
 #	RETURNS: 
+#  - c: the data that was read
+# FILES SAVED: none
 #
 ############################################################
 
@@ -127,9 +172,16 @@ def my_readhdf5(pathf, prop, cube = [-1], conv = 1):
 ############################################################
 #
 # my_readenzocorr:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: read the enzo corrections files, e.g. *conv2 files
+#	INPUT:
+#  + pathf: full path plus filename
+#           e.g. /path/file.conv2
+#	RETURNS: red, dens, vel, mag
+#  - red: redshift
+#  - dens: factor to convert density units to g/cm^3
+#  - vel: factor to convert velocity to cm/s
+#  - mag; factor to convert magnetic field to G
+# FILES SAVED: none
 #
 ############################################################
 
@@ -147,9 +199,26 @@ def my_readenzocorr(pathf):
 ############################################################
 #
 # my_ellipsoid:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: function, that creates a fits file that contains a 3D ellipsoid
+#         using 
+#	INPUT: 
+#  + mesh: 3D numpy array, that contains the mesh coordinates (x,y,z)
+#  + scale: scale of the radius, with (x-scale, y-scale, z-scale)
+#           e.g.: scale = [1, 0.5, 2] means that the ellipsoid
+#                 is not stretched in x direction
+#                 is stretched by 0.5 in y direction
+#                 is stretched by 2 in z direction
+#                 scale = [1,1,1] is a unit sphere
+#  + off: offset, if the ellipsoids center is not the box center (x-offset, y-offset, z-offset)
 #	RETURNS: 
+#  - im: 3D boolean array, that contains the ellipsoid, where
+#        cells with "True" belong to the ellipsoid
+#        cells with "False" do not belong to the ellipsoid
+#        im is saved in "ellipsoid*.fits"
+# FILES SAVED:
+#  ~ 'ellipsoid'+ '_' + str(scale[0]) + '_' + str(scale[1]) + '_' + str(scale[2]) + '_' + str(off[0]) + '_' + str(off[1]) + '_' + str(off[2]) +'.fits:
+#    fits file of the ellipsoid in the folder where the function was exectured
+#    the filename has the scale and offset encoded, please see the source code
 #
 ############################################################
 
@@ -169,16 +238,27 @@ def my_ellipsoid(mesh, scale, off):
 	im2[idT] = 1.
 	hdu = fits.PrimaryHDU(im2)
 	hdul = fits.HDUList([hdu])
-	hdul.writeto('ellipsoid'+ '_' + str(scale[0]) + '_' + str(scale[1]) + '_' + str(scale[2]) + '_' + str(off[0]) + '_' + str(off[1]) + '_' + str(off[2]) +'1.fits', overwrite = True)
+	hdul.writeto('ellipsoid'+ '_' + str(scale[0]) + '_' + str(scale[1]) + '_' + str(scale[2]) + '_' + str(off[0]) + '_' + str(off[1]) + '_' + str(off[2]) +'.fits', overwrite = True)
 	return im
 
 
 ############################################################
 #
 # my_scattercolored:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: do a colored scatter plot, with data x vs y and color col
+#	INPUT:
+#  + x: x coordinates of the image
+#  + y: y coordinates of the image
+#  + col: color coding for the plots
+#  + tit (optional): title of the image, default ''
+#  + xt (optional): xlabel of the image, default ''
+#  + yt (optional): ylabel of the image, default ''
+#  + ctit (optional): label of the colorbar, default ''
+#  + ocor (optional): position of the colorbar, default 'v'
+#                     - 'v' vertical
+#                     - 'h' horizontal
+#	RETURNS: nothing
+# FILES SAVED: none
 #
 ############################################################
 
@@ -202,9 +282,14 @@ def my_scattercolored(x,y,col, tit = '', xtit = '', ytit = '', ctit = '', cori =
 ###########################################################
 #
 # my_write_numpy_arr:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: saves data as "npy" (numpy array)
+#	INPUT:
+#  + data: the data to be saved
+#  + fname: full path plus filename without ".npy"
+#					  e.g.: /path/filename
+#	RETURNS: nothing
+# FILES SAVED:
+#  ~ filename.npy: the saved numpy array at /path/filename.npy
 #
 ############################################################
 
@@ -214,9 +299,13 @@ def my_write_numpy_arr(data, fname):
 ###########################################################
 #
 # my_read_numpy_arr:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: reads "npy" array (numpy array)
+#	INPUT: 
+#  + fname: full path plus filename without ".npy"
+#					  e.g.: /path/filename
 #	RETURNS: 
+#  - data: the data that was read
+# FILES SAVED: none
 #
 ############################################################
 
@@ -224,12 +313,51 @@ def my_read_numpy_arr(fname):
 	data = np.load(fname + '.npy')
 	return data
 
+###########################################################
+#
+# my_write_dat_arr:
+# 	TASK: saves data as "dat" array (formatred data)
+#	INPUT: 
+#  + data: the data to be saved
+#  + fname: full path plus filename without ".dat"
+#					  e.g.: /path/filename
+#	RETURNS: nothing
+# FILES SAVED:
+#  ~ filename.dat: the saved file at /path/filename.dat
+#
+############################################################
+
+def my_write_dat_arr(data, fname):
+	np.savetxt(fname + '.dat', data)
+
+###########################################################
+#
+# my_read_dat_arr:
+# 	TASK: reads "dat" array (formatted array)
+#	INPUT: 
+#  + fname: full path plus filename without ".dat"
+#					  e.g.: /path/filename
+#	RETURNS: 
+#  - data: the data that was read
+# FILES SAVED: none
+#
+############################################################
+
+def my_read_dat_arr(fname):
+	data = np.loadtxt(fname + '.dat')
+	return data
+
 ############################################################
 #
 # my_get_goldensize_latex:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: computes the golden ratio for an length x
+#         in principle, this can be used to compute "perfect"
+#         dimensions for plots
+#	INPUT: 
+#  + x: the length x
 #	RETURNS: 
+#  - x*goldenratio: the golden ratio of x
+# FILES SAVED: none
 #
 ############################################################
 
@@ -240,9 +368,14 @@ def my_goldenratio(x):
 ############################################################
 #
 # my_write_txt:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: writes text into a text file
+#	INPUT: 
+#  + fname: full path plus filename without ".txt"
+#           e.g. /path/filename
 #	RETURNS: 
+#  - text: the text to be written into the file
+# FILES SAVED: 
+#  ~ filename.txt: the saved text at /path/filename.txt
 #
 ############################################################
 
@@ -253,9 +386,28 @@ def my_write_txt(fname, text):
 ############################################################
 #
 # my_enzo_conv_to_time:
-# 	TASK: 
-#	INPUT: + 
-#	RETURNS: 
+# 	TASK: computes the time and redshift of the different enzo snapshots
+#	INPUT:
+#  + path: path to the enzo files
+#  + fname: name of the *conv2 files, but only the static part
+#           e.g.: for sim_cosmDD0001, sim_cosmDD0002, sim_cosmDD0003
+#                 fname = 'sim_cosmDD0'
+#  + snap0: first snapshot to be read
+#           e.g. 1 for the example above
+#  + snap1: last snapshot to be read
+#           e.g. 3 for the example above
+#  + h0: Hubbel Constant, i.e. H0 in (km/s)/Mpc
+#        if small h0 is given, it is converted to H0
+#  + ome_m: Omega_m, density parameter 
+#  + ome_l: Omega_Lambda, vacuum density today
+#  + unit (optional): set to get specific time units, default 'Gyr'
+#                     - 'Gyr': Gigayears
+#                     - 'Myr': Megayears
+#                     - 'sec': seconds
+#	RETURNS: nothing
+# FILES SAVED: 
+#  ~ redshift.dat: the redshifts saved at /path/redshift.dat
+#  ~ time.dat: the times saved at /path/time.dat
 #
 ############################################################
 
@@ -280,17 +432,28 @@ def my_enzo_conv_to_time(path, fname, snap0, snap1, h0, ome_m, ome_l, unit = 'Gy
 		ct = my_red_to_time(ome_m, ome_l, h0, cr, unit = unit)
 		time[ds] = ct
 
-	my_write_numpy_arr(red, path + 'redshift')
-	my_write_numpy_arr(time, path + 'time')
+	my_write_dat_arr(red, path + 'redshift')
+	my_write_dat_arr(time, path + 'time')
 
 
 
 ############################################################
 #
 # my_red_to_time:
-# 	TASK: 
-#	INPUT: + 
+# 	TASK: converts a redshift into time
+#	INPUT: 
+#  + ome_m: Omega_m, density parameter 
+#  + ome_l: Omega_Lambda, vacuum density today
+#  + h0: Hubbel Constant, i.e. H0 in (km/s)/Mpc
+#        if small h0 is given, it is converted to H0
+#  + cr: the redshift
+#  + unit (optional): set to get specific time units, default 'Gyr'
+#                     - 'Gyr': Gigayears
+#                     - 'Myr': Megayears
+#                     - 'sec': seconds
 #	RETURNS: 
+#  - the time
+# FILES SAVED: none
 #
 ############################################################
 
