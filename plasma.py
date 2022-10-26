@@ -1,3 +1,16 @@
+################### CONTENT ################################
+#
+# This file contains functions that can be used to compute
+# various plasma properties of 3D grid data
+#
+# it contains
+# - sound_speed: computes sound speed
+# - jeans_length: computes jeans length
+# - plasma_pressure: computes magnetic pressure
+# - magnetic_tension: computes magnetic tension
+#
+############################################################
+
 pypath = '/home/stuf317/python'
 
 import astropy as apy

@@ -1,5 +1,31 @@
+################### CONTENT ################################
+#
+# contains functions that are needed for multiple scripts
+#
+# it contains:
+# -my_plot_init:
+# -my_readfits:
+# -my_writefits:
+# -my_contour:
+# -my_readhdf5:
+# -my_readenzocorr:
+# -my_ellipsoid:
+# -my_scattercolored:
+# -my_write_numpy_arr:
+# -my_read_numpy_arr:
+# -my_write_dat_arr:
+# -my_read_dat_arr:
+# -my_goldenratio:
+# -my_write_txt:
+# -my_enzo_conv_to_time:
+# -my_red_to_time:
+# -my_derivativ:
+# -my_get_array_size:
+#
+############################################################
+
 from astropy.io import fits
-import aplpy
+#import aplpy
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py as h5
