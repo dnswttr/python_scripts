@@ -187,13 +187,44 @@ def my_contour(x,y,im, nlev = 256, tit = '',  xt = '', yt = '', ct = '', cm = 'm
 ############################################################
 
 def my_readhdf5(pathf, prop, cube = [-1], conv = 1):
-	data = h5.File(pathf, "r")
-	d = data[prop]
+	fin = h5.File(pathf, "r")
+	d = fin[prop]
 	if cube[0] == -1:
 		c = d[:,:,:] * conv
 	else:
 		c = d[cube[0]:cube[1]+1, cube[2]:cube[3]+1, cube[4]:cube[5]+1] * conv
 	return c
+
+############################################################
+#
+# my_writehdf5:
+# 	TASK: write a hdf5 file
+#	INPUT:
+#  + pathf: full path plus filename, no '.hdf5' required
+#           e.g.: /path/file
+#  + prop: list of names of the quantities saved
+#          e.g. ['Density', 'Temperature', etc]
+#  + data: list with the different data cubes
+#          the first dimension of data must be the same as
+#          the lenght of prop
+#     
+#	RETURNS: nothing
+# FILES SAVED: 
+#  ~ the saved hdf5 file, e.g./path/file.hdf5
+#
+############################################################
+
+def my_writehdf5(pathf, prop, data):
+	fout = h5.File(pathf + '.hdf5', "w")
+	if np.size(prop) != np.size(data,0):
+		print('ERROR: different number of props than number of datasets')
+		print('       in my_writehdf5')
+		exit()
+
+	for i in range(np.size(prop)):
+		dset = fout.create_dataset(prop[i], data=data[i])
+
+	fout.close()
 
 ############################################################
 #
