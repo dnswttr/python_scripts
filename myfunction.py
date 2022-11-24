@@ -1,5 +1,5 @@
 ################### CONTENT ################################
-#
+# 
 # contains functions that are needed for multiple scripts
 #
 # it contains:
