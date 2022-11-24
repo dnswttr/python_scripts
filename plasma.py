@@ -38,7 +38,7 @@ def sound_speed(gam, temp, mu):
 
 ############################################################
 #
-# jeans_length:
+# jeans_length: 
 #   TASK: 
 # INPUT: + 
 # RETURNS: 
