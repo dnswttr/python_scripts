@@ -11,7 +11,7 @@
 #
 ############################################################
 
-pypath = '/home/stuf317/python'
+pypath = '...'
 
 import astropy as apy
 import aplpy
